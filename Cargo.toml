@@ -1,0 +1,17 @@
+[package]
+name = "gtranslate"
+version = "0.1.0"
+authors = ["sabitmaulana <sabitmaulanaa@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[profile.release]
+opt-level = 'z'  # Optimize for size
+lto = true # link-time optimization
+codegen-units = 1 # reduce parallel codegen
+panic = 'abort' # abort on panic
+
+[dependencies]
+curl = "0.4.28"
+serde_json = "1.0"
