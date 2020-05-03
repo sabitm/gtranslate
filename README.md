@@ -3,7 +3,7 @@ gtranslate - Google translate on command line
 
 ![alt text](https://i.postimg.cc/FKcHr762/20200503-11h20m29s-grim.jpg "gtranslate on action")
 
-gtranslate is a command line tool for translation purpose, written on Rust. using unofficial API from google translate [extension for chrome]([https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?hl=en](https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?hl=en)).
+gtranslate is a command line tool for translation purpose, written on Rust. using unofficial API from google translate [extension for chrome](https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?hl=en)
 
 Dependecies
 ----------------
@@ -13,7 +13,7 @@ serde_json = "1.0"
 ```
 Build
 -------
-You can download a precompiled binary from [release page]([https://github.com/sabitm/gtranslate/releases](https://github.com/sabitm/gtranslate/releases)) or build yourself. you need rustc and cargo installed. it's easier to setup using [rustup](https://rustup.rs/).
+You can download a precompiled binary from [release page](https://github.com/sabitm/gtranslate/releases) or build yourself. you need rustc and cargo installed. it's easier to setup using [rustup](https://rustup.rs/).
 ```
 cargo build --release
 ```
