@@ -35,7 +35,13 @@ fn translator() -> Result<(), i32> {
         transfer.perform().unwrap();
     }
 
-    let res: Value = serde_json::from_slice(&buf).unwrap();
+    let res: Value = match serde_json::from_slice(&buf) {
+        Ok(val) => val,
+        Err(_) => {
+            eprintln!("source or target language not found");
+            return Err(3)
+        }
+    };
     println!("translate: {}", res["sentences"][0]["trans"].as_str().unwrap());
 
     if res["dict"][0]["pos"] != serde_json::Value::Null {
