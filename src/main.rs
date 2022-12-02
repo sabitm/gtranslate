@@ -24,6 +24,7 @@ fn translator() -> Result<(), i32> {
     let mut buf = Vec::new();
     let mut easy = Easy::new();
     let enc_args = easy.url_encode(args.as_bytes());
+
     easy.url(
         &[
             URL_FRAGMENT.0,
@@ -54,10 +55,12 @@ fn translator() -> Result<(), i32> {
             return Err(3);
         }
     };
-    println!(
-        "translate: {}",
-        res["sentences"][0]["trans"].as_str().unwrap()
-    );
+
+    print!("translate: ");
+    for s in res["sentences"].as_array().unwrap().iter() {
+        print!("{}", s["trans"].as_str().unwrap());
+    }
+    println!();
 
     if res["dict"][0]["pos"] != serde_json::Value::Null {
         for i in res["dict"].as_array().unwrap().iter() {
@@ -65,7 +68,7 @@ fn translator() -> Result<(), i32> {
             for j in i["terms"].as_array().unwrap().iter() {
                 print!("{}, ", j.as_str().unwrap());
             }
-            println!("");
+            println!();
         }
     }
 
