@@ -8,7 +8,7 @@ gtranslate is a command line tool for translation purpose, written on Rust. usin
 Dependecies
 ----------------
 ```
-curl = "0.4.28"
+curl = "0.4.44"
 serde_json = "1.0"
 ```
 Build
@@ -16,10 +16,6 @@ Build
 You can download a precompiled binary from [release page](https://github.com/sabitm/gtranslate/releases) or build yourself. you need rustc and cargo installed. it's easier to setup using [rustup](https://rustup.rs/).
 ```
 cargo build --release
-```
-you can strip the binary for smaller size
-```
-strip target/release/gtranslate
 ```
 
 Usage
