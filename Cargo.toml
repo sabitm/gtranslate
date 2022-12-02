@@ -11,6 +11,7 @@ opt-level = 'z'  # Optimize for size
 lto = true # link-time optimization
 codegen-units = 1 # reduce parallel codegen
 panic = 'abort' # abort on panic
+strip = true
 
 [dependencies]
 curl = "0.4.44"
