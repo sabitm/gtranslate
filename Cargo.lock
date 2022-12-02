@@ -46,7 +46,7 @@ dependencies = [
 
 [[package]]
 name = "gtranslate"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "curl",
  "serde_json",
