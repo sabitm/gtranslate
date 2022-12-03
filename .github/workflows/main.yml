@@ -20,7 +20,8 @@ jobs:
 
       - name: Install aarch64-unknown-linux-gnu toolchain
         run: |
-          sudo apt-get install --assume-yes gcc-aarch64-linux-gnu
+          sudo apt-get update
+          sudo apt-get install --assume-yes gcc-aarch64-linux-gnu libssl-dev:aarch64
 
       - name: Release for Linux x86
         run: |
