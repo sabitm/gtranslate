@@ -1,0 +1,30 @@
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build for Linux x86
+        run: |
+          cargo build --release --target x86_64-unknown-linux-gnu
+
+      - name: Build for Linux aarch64
+        run: |
+          cargo build --release --target aarch64-unknown-linux-gnu
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: linux-binaries
+          path: target/x86_64-unknown-linux-gnu/release/target/x86_64-unknown-linux-gnu/release/gtranslate,target/aarch64-unknown-linux-gnu/release/gtranslate
