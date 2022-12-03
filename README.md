@@ -3,7 +3,7 @@ gtranslate - Google translate on command line
 
 ![alt text](gtranslate-in-action.png "gtranslate on action")
 
-gtranslate is a command line tool for translation purpose, written in Rust. using unofficial API from google translate [extension for chrome](https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?hl=en)
+`gtranslate` is a command line tool for translation purpose, written in Rust. using unofficial API from google translate [extension for chrome](https://chrome.google.com/webstore/detail/google-translate/aapbdbdomjkkjkaonfhkkikfgjllcleb?hl=en)
 
 Dependecies
 ----------------
