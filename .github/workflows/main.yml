@@ -1,6 +1,10 @@
 name: Build/publish release
 
-on: push
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   publish:
@@ -32,6 +36,9 @@ jobs:
           toolchain: stable
           target: ${{ matrix.target }}
           override: true
+
+      - run: sudo apt install libssl-dev
+        if: startsWith(matrix.os, 'ubuntu')
 
       - name: cargo build
         uses: actions-rs/cargo@v1
