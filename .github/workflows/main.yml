@@ -18,13 +18,8 @@ jobs:
         target: aarch64-unknown-linux-gnu
     - name: Install openssl
       run: |
-<<<<<<< HEAD
         sudo apt-get update
         sudo apt-get install -y libssl-dev
-=======
-        apt-get update
-        apt-get install -y libssl-dev
->>>>>>> 4df49eb198b0e4d89c9bbbe469090b7731a9f368
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
     - name: Build project for aarch64
