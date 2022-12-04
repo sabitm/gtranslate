@@ -14,5 +14,5 @@ panic = 'abort' # abort on panic
 strip = true
 
 [dependencies]
-curl = "0.4.44"
+curl = { version = "0.4.44", default-features = false, features = ["rustls"] }
 serde_json = "1.0"
