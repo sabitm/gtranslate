@@ -25,7 +25,9 @@ jobs:
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
     - name: Build project for aarch64
-      run: cargo build --release --target=aarch64-unknown-linux-gnu
+      run: |
+        export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=$(which aarch64-linux-gnu-gcc)
+        cargo build --release --target=aarch64-unknown-linux-gnu
 
     - name: Create Release
       uses: actions/create-release@v1
