@@ -16,10 +16,13 @@ jobs:
       with:
         toolchain: stable
         target: aarch64-unknown-linux-gnu
-    - name: Install required tools
+    - name: Install openssl
       run: |
         sudo apt-get update
-        sudo apt-get install -y libssl-dev gcc-aarch64-linux-gnu
+        sudo apt-get install -y libssl-dev
+    - name: Install aarch64-linux-gnu-gcc and libssl-dev for aarch64
+      run: |
+        sudo apt-get install -y gcc-aarch64-linux-gnu libssl-dev:arm64
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
     - name: Build project for aarch64
