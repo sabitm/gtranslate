@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -16,19 +16,12 @@ jobs:
       with:
         toolchain: stable
         target: aarch64-unknown-linux-gnu
-    - name: Install openssl
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y libssl-dev
-    - name: Install aarch64-linux-gnu-gcc and libssl-dev for aarch64
-      run: |
-        sudo dpkg --add-architecture arm64
-        sudo apt-get update
-        sudo apt-get install -y gcc-aarch64-linux-gnu libssl-dev:arm64
+
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
     - name: Build project for aarch64
       run: cargo build --release --target=aarch64-unknown-linux-gnu
+
     - name: Create Release
       uses: actions/create-release@v1
       env:
@@ -38,6 +31,7 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
+
     - name: Upload Binary for x86_64
       uses: actions/upload-release-asset@v1
       env:
@@ -47,6 +41,7 @@ jobs:
         asset_path: target/x86_64-unknown-linux-gnu/release/gtranslate
         asset_name: gtranslate-x86_64-unknown-linux-gnu
         asset_content_type: application/octet-stream
+
     - name: Upload Binary for aarch64
       uses: actions/upload-release-asset@v1
       env:
