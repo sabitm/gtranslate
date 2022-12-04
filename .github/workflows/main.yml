@@ -1,63 +1,53 @@
-name: Release
+name: Build and Release
 
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*'
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Setup Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          target: aarch64-unknown-linux-gnu
-
-      - name: Install aarch64-unknown-linux-gnu toolchain
-        run: |
-          sudo dpkg --add-architecture arm64
-          sudo apt-get update
-          sudo apt-get install --assume-yes gcc-aarch64-linux-gnu libssl-dev:arm64
-
-      - name: Release for Linux x86
-        run: |
-          cargo build --release --target x86_64-unknown-linux-gnu
-
-      - name: Release for Linux aarch64
-        run: |
-          cargo build --release --target aarch64-unknown-linux-gnu
-
-      - name: Create release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Linux x86 binary
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/x86_64-unknown-linux-gnu/release/gtranslate
-          asset_name: gtranslate-x86_64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
-
-      - name: Upload Linux aarch64 binary
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: target/aarch64-unknown-linux-gnu/release/gtranslate
-          asset_name: gtranslate-aarch64-unknown-linux-gnu
-          asset_content_type: application/octet-stream
+    - uses: actions/checkout@v2
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        target: aarch64-unknown-linux-gnu
+    - name: Install openssl
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libssl-dev
+    - name: Build project for x86_64
+      run: cargo build --release --target=x86_64-unknown-linux-gnu
+    - name: Build project for aarch64
+      run: cargo build --release --target=aarch64-unknown-linux-gnu
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload Binary for x86_64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: target/x86_64-unknown-linux-gnu/release/gtranslate
+        asset_name: gtranslate-x86_64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
+    - name: Upload Binary for aarch64
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: target/aarch64-unknown-linux-gnu/release/gtranslate
+        asset_name: gtranslate-aarch64-unknown-linux-gnu
+        asset_content_type: application/octet-stream
