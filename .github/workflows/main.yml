@@ -22,6 +22,8 @@ jobs:
         sudo apt-get install -y libssl-dev
     - name: Install aarch64-linux-gnu-gcc and libssl-dev for aarch64
       run: |
+        sudo dpkg --add-architecture arm64
+        sudo apt-get update
         sudo apt-get install -y gcc-aarch64-linux-gnu libssl-dev:arm64
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
