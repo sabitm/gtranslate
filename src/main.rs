@@ -1,60 +1,25 @@
-use curl::easy::Easy;
-use serde_json::Value;
+use anyhow::{bail, Result};
 use std::env;
+use ureq;
 
-fn main() {
-    std::process::exit(match translator() {
-        Ok(_) => 0,
-        Err(err) => err,
-    });
+fn main() -> Result<()> {
+    Ok(translator()?)
 }
 
-fn translator() -> Result<(), i32> {
-    let (src_lang, trg_lang, args) = match parse_args() {
-        Ok((s, t, a)) => (s, t, a),
-        Err(err) => return Err(err),
-    };
+fn translator() -> Result<()> {
+    let (src_lang, trg_lang, args) = parse_args()?;
 
-    const URL_FRAGMENT: (&str, &str, &str) = (
+    let url = [
         "https://translate.googleapis.com/translate_a/single?client=gtx&sl=",
+        src_lang.as_str(),
         "&tl=",
+        trg_lang.as_str(),
         "&hl=en-US&dt=t&dt=bd&dj=1&source=icon&tk=316277.316277&q=",
-    );
+        args.as_str(),
+    ]
+    .concat();
 
-    let mut buf = Vec::new();
-    let mut easy = Easy::new();
-    let enc_args = easy.url_encode(args.as_bytes());
-
-    easy.url(
-        &[
-            URL_FRAGMENT.0,
-            src_lang.as_str(),
-            URL_FRAGMENT.1,
-            trg_lang.as_str(),
-            URL_FRAGMENT.2,
-            enc_args.as_str(),
-        ]
-        .concat(),
-    )
-    .unwrap();
-    {
-        let mut transfer = easy.transfer();
-        transfer
-            .write_function(|data| {
-                buf.extend_from_slice(data);
-                Ok(data.len())
-            })
-            .unwrap();
-        transfer.perform().unwrap();
-    }
-
-    let res: Value = match serde_json::from_slice(&buf) {
-        Ok(val) => val,
-        Err(_) => {
-            eprintln!("source or target language not found");
-            return Err(3);
-        }
-    };
+    let res: serde_json::Value = ureq::get(url.as_str()).call()?.into_json()?;
 
     print!("translate: ");
     for s in res["sentences"].as_array().unwrap().iter() {
@@ -75,10 +40,10 @@ fn translator() -> Result<(), i32> {
     Ok(())
 }
 
-fn parse_args() -> Result<(String, String, String), i32> {
+fn parse_args() -> Result<(String, String, String)> {
     if env::args().len() <= 5 {
         usage();
-        return Err(1);
+        bail!("Not enough argument!");
     }
 
     let (mut src_lang, mut trg_lang) = (String::new(), String::new());
@@ -93,8 +58,7 @@ fn parse_args() -> Result<(String, String, String), i32> {
             src_lang.push_str(args[3].as_str());
         }
         (_, _) => {
-            eprintln!("source and target language required");
-            return Err(2);
+            bail!("Source and target language required");
         }
     };
 
