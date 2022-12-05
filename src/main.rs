@@ -1,5 +1,4 @@
-use anyhow::{bail, Result};
-use std::env;
+use anyhow::Result;
 use ureq;
 
 fn main() -> Result<()> {
@@ -7,15 +6,22 @@ fn main() -> Result<()> {
 }
 
 fn translator() -> Result<()> {
-    let (src_lang, trg_lang, args) = parse_args()?;
+    let flags = xflags::parse_or_exit! {
+        /// Source language that the program will translate from
+        required -s,--source lang: String
+        /// Target language that the program will translate to
+        required -t,--target lang: String
+        /// Word, sentences that will be translated
+        required words: String
+    };
 
     let url = [
         "https://translate.googleapis.com/translate_a/single?client=gtx&sl=",
-        src_lang.as_str(),
+        flags.source.as_str(),
         "&tl=",
-        trg_lang.as_str(),
+        flags.target.as_str(),
         "&hl=en-US&dt=t&dt=bd&dj=1&source=icon&tk=316277.316277&q=",
-        args.as_str(),
+        flags.words.as_str(),
     ]
     .concat();
 
@@ -38,45 +44,4 @@ fn translator() -> Result<()> {
     }
 
     Ok(())
-}
-
-fn parse_args() -> Result<(String, String, String)> {
-    if env::args().len() <= 5 {
-        usage();
-        bail!("Not enough argument!");
-    }
-
-    let (mut src_lang, mut trg_lang) = (String::new(), String::new());
-    let mut args: Vec<String> = env::args().skip(1).collect();
-    match (args[0].as_str(), args[2].as_str()) {
-        ("-s", "-t") => {
-            src_lang.push_str(args[1].as_str());
-            trg_lang.push_str(args[3].as_str());
-        }
-        ("-t", "-s") => {
-            trg_lang.push_str(args[1].as_str());
-            src_lang.push_str(args[3].as_str());
-        }
-        (_, _) => {
-            bail!("Source and target language required");
-        }
-    };
-
-    let args: String = args
-        .drain(4..)
-        .map(|mut x| {
-            x.push(' ');
-            x
-        })
-        .collect();
-
-    Ok((src_lang, trg_lang, args))
-}
-
-fn usage() {
-    println!("USAGE:");
-    println!("\tgtranslate <OPTIONS> <word(s)>\n");
-    println!("\tOPTIONS:");
-    println!("\t-s\tspecify source language");
-    println!("\t-t\tspecify target language");
 }
