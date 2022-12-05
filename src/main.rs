@@ -1,4 +1,4 @@
-use anyhow::Result;
+use anyhow::{bail, Result};
 use ureq;
 
 fn main() -> Result<()> {
@@ -12,8 +12,12 @@ fn translator() -> Result<()> {
         /// Target language that the program will translate to
         required -t,--target lang: String
         /// Word, sentences that will be translated
-        required words: String
+        repeated words: String
     };
+
+    if flags.words.is_empty() {
+        bail!("flag is required: `<words>`");
+    }
 
     let url = [
         "https://translate.googleapis.com/translate_a/single?client=gtx&sl=",
@@ -21,7 +25,7 @@ fn translator() -> Result<()> {
         "&tl=",
         flags.target.as_str(),
         "&hl=en-US&dt=t&dt=bd&dj=1&source=icon&tk=316277.316277&q=",
-        flags.words.as_str(),
+        flags.words.join(" ").as_str(),
     ]
     .concat();
 
