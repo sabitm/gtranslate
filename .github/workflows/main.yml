@@ -17,11 +17,13 @@ jobs:
         toolchain: stable
         target: aarch64-unknown-linux-musl
 
-    - name: Install gcc for musl aarch64 and musl-tools
+    - name: Install gcc for musl aarch64
       run: |
-        sudo dpkg --add-architecture arm64
-        sudo apt update
-        sudo apt install -y --no-install-recommends musl:arm64 musl-tools
+        cd /tmp && curl -LO 'http://musl.cc/aarch64-linux-musl-cross.tgz'
+        tar -xvf aarch64-linux-musl-cross.tgz && cd aarch64-linux-musl-cross
+        rm -rf share/man/man7 share/locale/ share/gcc-*/ usr
+        ln -sfT ../lib/libc.so aarch64-linux-musl/lib/ld-musl-aarch64.so.1
+        sudo cp -r "./" /usr/
 
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
