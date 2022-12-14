@@ -17,10 +17,11 @@ jobs:
         toolchain: stable
         target: aarch64-unknown-linux-musl
 
-    - name: Install aarch64-linux-musl-gcc and musl-tools
+    - name: Install gcc for musl aarch64 and musl-tools
       run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-aarch64-linux-musl musl-tools
+        sudo dpkg --add-architecture arm64
+        sudo apt update
+        sudo apt install -y --no-install-recommends musl:arm64 musl-tools
 
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
