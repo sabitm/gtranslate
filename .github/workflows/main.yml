@@ -15,19 +15,19 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
-        target: aarch64-unknown-linux-gnu
+        target: aarch64-unknown-linux-musl
 
-    - name: Install aarch64-linux-gnu-gcc
+    - name: Install aarch64-linux-gnu-gcc and musl-tools
       run: |
         sudo apt-get update
-        sudo apt-get install -y gcc-aarch64-linux-gnu
+        sudo apt-get install -y gcc-aarch64-linux-gnu musl-tools
 
     - name: Build project for x86_64
       run: cargo build --release --target=x86_64-unknown-linux-gnu
     - name: Build project for aarch64
       run: |
         export CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=$(which aarch64-linux-gnu-gcc)
-        cargo build --release --target=aarch64-unknown-linux-gnu
+        cargo build --release --target=aarch64-unknown-linux-musl
 
     - name: Create Release
       id: create_release
@@ -56,6 +56,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: target/aarch64-unknown-linux-gnu/release/gtranslate
-        asset_name: gtranslate-aarch64-unknown-linux-gnu
+        asset_path: target/aarch64-unknown-linux-musl/release/gtranslate
+        asset_name: gtranslate-aarch64-unknown-linux-musl
         asset_content_type: application/octet-stream
