@@ -11,6 +11,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Build Cache
+      uses: actions/cache@v3
+      with:
+        path: build/*
+        key:  build-v1-${{ github.sha }}
+        restore-keys: build-v1-
     - name: Install Rust
       uses: actions-rs/toolchain@v1
       with:
