@@ -262,6 +262,8 @@ version = "0.1.1"
 dependencies = [
  "anyhow",
  "rsdns",
+ "serde",
+ "serde_derive",
  "serde_json",
  "ureq",
  "xflags",

@@ -1,9 +1,13 @@
+mod response;
+
 use std::io;
 use std::net::{IpAddr, SocketAddr};
 
 use anyhow::{bail, Result};
 use rsdns::clients::{std::Client, ClientConfig};
 use rsdns::{constants::Class, records::data::A};
+
+use crate::response::TransResponse;
 
 fn to_ioerror<T>(err: T) -> io::Error
 where
@@ -58,19 +62,22 @@ fn translator() -> Result<()> {
     .concat();
 
     let agent = ureq::builder().resolver(resolve).build();
-    let resp: serde_json::Value = agent.get(url.as_str()).call()?.into_json()?;
+    let resp: TransResponse = agent.get(url.as_str()).call()?.into_json()?;
+    // Debugging purpose
+    // let resp: String = agent.get(url.as_str()).call()?.into_string()?;
+    // println!("{}", &resp);
 
     print!("translate: ");
-    for s in resp["sentences"].as_array().unwrap().iter() {
-        print!("{}", s["trans"].as_str().unwrap());
+    for s in resp.sentences {
+        print!("{}", s.trans);
     }
     println!();
 
-    if resp["dict"][0]["pos"] != serde_json::Value::Null {
-        for i in resp["dict"].as_array().unwrap().iter() {
-            println!("\n{}:", i["pos"].as_str().unwrap());
-            for j in i["terms"].as_array().unwrap().iter() {
-                print!("{}, ", j.as_str().unwrap());
+    if let Some(dicts) = resp.dict {
+        for dict in dicts {
+            println!("\n{}:", dict.pos);
+            for entry in dict.entry {
+                print!("{}, ", entry.word);
             }
             println!();
         }
