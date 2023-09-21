@@ -1,37 +1,9 @@
+mod helper;
 mod response;
 
-use std::io;
-use std::net::{IpAddr, SocketAddr};
-
 use anyhow::{bail, Result};
-use rsdns::clients::{std::Client, ClientConfig};
-use rsdns::{constants::Class, records::data::A};
 
 use crate::response::TransResponse;
-
-fn to_ioerror<T>(err: T) -> io::Error
-where
-    T: std::error::Error + Send + Sync + 'static,
-{
-    io::Error::new(io::ErrorKind::Other, err)
-}
-
-fn resolve(qname: &str) -> io::Result<Vec<SocketAddr>> {
-    let qname: Vec<&str> = qname.split(':').collect();
-    let port: u16 = qname[1].parse().map_err(to_ioerror)?;
-    let qname = qname[0];
-    let nameserver: SocketAddr = ([8, 8, 8, 8], 53).into();
-    let mut client = Client::new(ClientConfig::with_nameserver(nameserver)).map_err(to_ioerror)?;
-    let rrset = client
-        .query_rrset::<A>(qname, Class::In)
-        .map_err(to_ioerror)?;
-
-    Ok(rrset
-        .rdata
-        .iter()
-        .map(|a| SocketAddr::new(IpAddr::V4(a.address), port))
-        .collect())
-}
 
 fn main() -> Result<()> {
     translator()
@@ -53,18 +25,18 @@ fn translator() -> Result<()> {
 
     let url = [
         "https://translate.googleapis.com/translate_a/single?client=gtx&sl=",
-        flags.source.as_str(),
+        &flags.source,
         "&tl=",
-        flags.target.as_str(),
+        &flags.target,
         "&hl=en-US&dt=t&dt=bd&dj=1&source=icon&tk=316277.316277&q=",
-        flags.words.join(" ").as_str(),
+        &flags.words.join(" "),
     ]
     .concat();
 
-    let agent = ureq::builder().resolver(resolve).build();
-    let resp: TransResponse = agent.get(url.as_str()).call()?.into_json()?;
+    let agent = ureq::builder().resolver(helper::resolve).build();
+    let resp: TransResponse = agent.get(&url).call()?.into_json()?;
     // Debugging purpose
-    // let resp: String = agent.get(url.as_str()).call()?.into_string()?;
+    // let resp: String = agent.get(&url).call()?.into_string()?;
     // println!("{}", &resp);
 
     print!("translate: ");
