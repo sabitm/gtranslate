@@ -594,9 +594,9 @@ dependencies = [
 
 [[package]]
 name = "rsdns"
-version = "0.13.1"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b41141c65bf7cc6595897d6bbbb57d4003722cf17de06b44d14766bac9b93ae1"
+checksum = "6eede25b1d48c90a93167428ca549b977a598e1d2a9c708610f917308d2550f6"
 dependencies = [
  "arrayvec",
  "cfg-if",

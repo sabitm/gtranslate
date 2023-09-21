@@ -7,15 +7,15 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [profile.release]
-opt-level = 'z'  # Optimize for size
-lto = true # link-time optimization
+opt-level = 'z'   # Optimize for size
+lto = true        # link-time optimization
 codegen-units = 1 # reduce parallel codegen
-panic = 'abort' # abort on panic
+panic = 'abort'   # abort on panic
 strip = true
 
 [dependencies]
 anyhow = "1.0.75"
-rsdns = { version = "0.13.1", features = ["net-std"] }
+rsdns = { version = "0.15.0", features = ["net-std"] }
 serde = "1.0.188"
 serde_derive = "1.0.188"
 ureq = { version = "2.7.1", features = ["json"] }
