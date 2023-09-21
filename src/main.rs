@@ -4,7 +4,6 @@ use std::net::{IpAddr, SocketAddr};
 use anyhow::{bail, Result};
 use rsdns::clients::{std::Client, ClientConfig};
 use rsdns::{constants::Class, records::data::A};
-use ureq;
 
 fn to_ioerror<T>(err: T) -> io::Error
 where
@@ -31,7 +30,7 @@ fn resolve(qname: &str) -> io::Result<Vec<SocketAddr>> {
 }
 
 fn main() -> Result<()> {
-    Ok(translator()?)
+    translator()
 }
 
 fn translator() -> Result<()> {
