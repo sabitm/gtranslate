@@ -14,9 +14,9 @@ panic = 'abort'   # abort on panic
 strip = true
 
 [dependencies]
-anyhow = "1.0.75"
-rsdns = { version = "0.15.0", features = ["net-std"] }
-serde = "1.0.188"
-serde_derive = "1.0.188"
-ureq = { version = "2.7.1", features = ["json"] }
-xflags = "0.3.1"
+anyhow = "1.0.82"
+rsdns = { version = "0.17.0", features = ["net-std"] }
+serde = "1.0.200"
+serde_derive = "1.0.200"
+ureq = { version = "2.9.7", features = ["json"] }
+xflags = "0.3.2"

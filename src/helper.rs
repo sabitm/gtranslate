@@ -2,7 +2,7 @@ use std::io;
 use std::net::{IpAddr, SocketAddr};
 
 use rsdns::clients::{std::Client, ClientConfig};
-use rsdns::{constants::Class, records::data::A};
+use rsdns::{records::data::A, records::Class};
 
 fn to_ioerror<T>(err: T) -> io::Error
 where
@@ -18,7 +18,7 @@ pub fn resolve(qname: &str) -> io::Result<Vec<SocketAddr>> {
     let nameserver: SocketAddr = ([8, 8, 8, 8], 53).into();
     let mut client = Client::new(ClientConfig::with_nameserver(nameserver)).map_err(to_ioerror)?;
     let rrset = client
-        .query_rrset::<A>(qname, Class::In)
+        .query_rrset::<A>(qname, Class::IN)
         .map_err(to_ioerror)?;
 
     Ok(rrset
