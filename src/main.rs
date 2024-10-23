@@ -1,6 +1,8 @@
 mod helper;
 mod response;
 
+use std::net::SocketAddr;
+
 use anyhow::{bail, Result};
 
 use crate::response::TransResponse;
@@ -15,6 +17,8 @@ fn translator() -> Result<()> {
         required -s,--source lang: String
         /// Target language that the program will translate to
         required -t,--target lang: String
+        /// Optional DNS configuration, default if empty: 8.8.8.8
+        optional --dns dns: String
         /// Word, sentences that will be translated
         repeated words: String
     };
@@ -33,8 +37,28 @@ fn translator() -> Result<()> {
     ]
     .concat();
 
-    let agent = ureq::builder().resolver(helper::resolve).build();
+    let mut agent = ureq::builder();
+
+    // Set DNS if given argument
+    if let Some(dns) = flags.dns {
+        if !dns.is_empty() {
+            // Check if dns port is given
+            let mut dns = dns;
+            if !dns.contains(':') {
+                dns += ":53";
+            }
+
+            let sock_addr = dns.parse::<SocketAddr>()?;
+            if let Err(v) = helper::DNS_ADDR.set(sock_addr) {
+                bail!("failed to set DNS addr: {}", v);
+            }
+        }
+        agent = agent.resolver(helper::resolve);
+    }
+
+    let agent = agent.build();
     let resp: TransResponse = agent.get(&url).call()?.into_json()?;
+
     // Debugging purpose
     // let resp: String = agent.get(&url).call()?.into_string()?;
     // println!("{}", &resp);
