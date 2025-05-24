@@ -1,6 +1,6 @@
 [package]
 name = "gtranslate"
-version = "1.1.0"
+version = "1.1.2"
 authors = ["sabitmaulana <sabitmaulanaa@gmail.com>"]
 edition = "2018"
 
@@ -15,7 +15,7 @@ strip = true
 
 [dependencies]
 anyhow = "1.0.82"
-rsdns = { version = "0.19.0", features = ["net-std"] }
+rsdns = { version = "0.20.0", features = ["net-std"] }
 serde = "1.0.200"
 serde_derive = "1.0.200"
 ureq = { version = "2.12.1", features = ["json"] }
