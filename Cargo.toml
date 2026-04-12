@@ -19,4 +19,5 @@ rsdns = { version = "0.20.0", features = ["net-std"] }
 serde = "1.0.200"
 serde_derive = "1.0.200"
 ureq = { version = "3.3.0", features = ["json"] }
+urlencoding = "2"
 xflags = "0.3.2"

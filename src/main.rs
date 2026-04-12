@@ -35,7 +35,7 @@ fn translator() -> Result<()> {
         "&tl=",
         &flags.target,
         "&hl=en-US&dt=t&dt=bd&dj=1&source=icon&tk=316277.316277&q=",
-        &flags.words.join(" "),
+        &urlencoding::encode(&flags.words.join(" ")),
     ]
     .concat();
 
