@@ -4,6 +4,8 @@ mod response;
 use std::net::SocketAddr;
 
 use anyhow::{bail, Result};
+use ureq::Agent;
+use ureq::unversioned::transport::DefaultConnector;
 
 use crate::response::TransResponse;
 
@@ -37,10 +39,10 @@ fn translator() -> Result<()> {
     ]
     .concat();
 
-    let mut agent = ureq::builder();
+    let config = Agent::config_builder().build();
 
     // Set DNS if given argument
-    if let Some(dns) = flags.dns {
+    let agent = if let Some(dns) = flags.dns {
         if !dns.is_empty() {
             // Check if dns port is given
             let mut dns = dns;
@@ -53,11 +55,12 @@ fn translator() -> Result<()> {
                 bail!("failed to set DNS addr: {}", v);
             }
         }
-        agent = agent.resolver(helper::resolve);
-    }
+        Agent::with_parts(config, DefaultConnector::default(), helper::CustomResolver)
+    } else {
+        Agent::new_with_config(config)
+    };
 
-    let agent = agent.build();
-    let resp: TransResponse = agent.get(&url).call()?.into_json()?;
+    let resp: TransResponse = agent.get(&url).call()?.body_mut().read_json()?;
 
     // Debugging purpose
     // let resp: String = agent.get(&url).call()?.into_string()?;
