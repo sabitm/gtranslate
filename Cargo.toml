@@ -1,6 +1,6 @@
 [package]
 name = "gtranslate"
-version = "1.1.3"
+version = "1.1.4"
 authors = ["sabitmaulana <sabitmaulanaa@gmail.com>"]
 edition = "2018"
 

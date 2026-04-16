@@ -346,7 +346,7 @@ dependencies = [
 
 [[package]]
 name = "gtranslate"
-version = "1.1.3"
+version = "1.1.4"
 dependencies = [
  "anyhow",
  "rsdns",
@@ -811,9 +811,9 @@ dependencies = [
 
 [[package]]
 name = "rand"
-version = "0.9.1"
+version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9fbfd9d094a40bf3ae768db9361049ace4c0e04a4fd6b359518bd7b73a73dd97"
+checksum = "44c5af06bb1b7d3216d91932aed5265164bf384dc89cd6ba05cf59a35f5f76ea"
 dependencies = [
  "rand_chacha 0.9.0",
  "rand_core 0.9.3",
@@ -908,7 +908,7 @@ checksum = "0ce4cb56031a5bc745a38c30c2e46806f20ffcca8519178ea0532f4ceada1530"
 dependencies = [
  "arrayvec",
  "cfg-if",
- "rand 0.9.1",
+ "rand 0.9.4",
  "tera",
  "thiserror 2.0.12",
 ]
